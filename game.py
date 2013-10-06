@@ -1,7 +1,5 @@
 from SimpleCV import *
-import pygame
-import itertools
-from pygame.locals import *
+
 import os
 import time
 
@@ -35,13 +33,10 @@ def test():
 	return "Testing 123"
 @app.route('/', methods = ['GET','POST'])
 def main():
-	pygame.init()
 	xSpeed = 0
 	ySpeed = 0
 	simplecvimg = Image(BGIMAGE)
-	screen = pygame.display.set_mode((simplecvimg.width,simplecvimg.height))
 	train = False
-	player = pygame.image.load('player.png').convert()
 	# blue = simplecvimg.colorDistance((2,7,63)) * 2  #scale up
 	blue = simplecvimg.colorDistance((2,5,55)) * 1.5  #scale up
 	# blue.show()
@@ -153,10 +148,7 @@ def main():
 	# blue.show()
 	# for x in range(500):
 	# 	cv.WaitKey(10)
-	position = player.get_rect()
-	background = pygame.image.load(BGIMAGE).convert()
-	position = position.move(10, 0)     #move player
-	# for x in range(1000):
+
 	# 	cv.WaitKey(10)
 	total = []
 	for l in allLines:
@@ -164,98 +156,11 @@ def main():
 		for x in l[1:]:
 			total.append((past[:2],x[2:]))
 			past = x
-	for l in total:
-		pygame.draw.lines(screen,(255,0,0),False,l,1)
-		pygame.display.update()
 
-		cv.WaitKey(10)
 
 	print total
 
-	while True:
-		#LOTS OF KEY BULLSHIT
-		event = pygame.event.poll()
-		if event.type == KEYDOWN:
-			keymap[event.scancode] = event.unicode
-			print str(event.scancode) + " Down!"
 
-		if event.type == KEYUP:
-			print 'keyup %s pressed' % keymap[event.scancode]
-			del keymap[event.scancode]
-		# print keymap
-		#END KEY BULLSHIT
-		screen.blit(background, (0, 0))
-		#game loop
-		if 2 in keymap: # LEFT
-			xSpeed += .5
-		if 0 in keymap: # RIGHT
-			xSpeed -= .5
-		if 0 not in keymap and 2 not in keymap:  #decelerate x
-			xSpeed *= .9
-		if 49 in keymap and ySpeed == 0:
-			ySpeed -= 8
-		else:
-			ySpeed += .4
-
-		if xSpeed > 5:
-			xSpeed = 5
-		elif xSpeed < -5:
-			xSpeed = -5
-		elif xSpeed < .2 and xSpeed > -.2:
-			xSpeed = 0
-
-		
-		for l in lines:
-			pygame.draw.lines(screen,(255,0,0),False,l,1)
-
-		#OBSTACLE CHECK HERE
-		position = position.move(xSpeed, ySpeed)     #move player
-
-		botLine = (position.x,position.y,position.x + 25,position.y+25)
-		bl = ((botLine[0],botLine[1]),(botLine[2],botLine[3]))
-		pygame.draw.lines(screen,(255,0,0),False,bl,5)
-
-		for line in total:
-			# print line
-			compLine = (line[0][0],line[0][1],line[1][0],line[1][1])
-			# print compLine
-
-			# print seg_intersect(botLine,compLine)
-			if seg_intersect(botLine, compLine):
-				screen.blit(background, (0, 0))
-				botLine = (position.x,position.y,position.x + 25,position.y+25)
-				pygame.draw.lines(screen,(0,0,255),False,(compLine[:2],compLine[2:]),5)
-				bl = ((botLine[0],botLine[1]),(botLine[2],botLine[3]))
-
-				pygame.draw.lines(screen,(255,0,255),False,bl,5)
-				# pygame.display.update()
-				pygame.draw.lines(screen,(0,255,0),False,(compLine[:2],compLine[2:]),5)
-				ySpeed = 0
-
-		#endLines
-		el1 = (endx-(endw/2),endy - (endh/2),endx-(endw/2),endy + (endh/2))
-		# print el1
-		if seg_intersect(botLine,el1):
-			print "WINNER"
-			return
-
-
-
-		if position.y > simplecvimg.height - 30:
-			position.move(0,simplecvimg.height - 30-position.y)
-			ySpeed = 0
-
-		screen.blit(player, position) 
-		
-
-
-		pygame.display.update()
-		# print "XSPEED: " + str(xSpeed)
-		# print "YSPEED: " + str(ySpeed)
-
-		cv.WaitKey(25)
-		# break
-	#TOTAL IS ALL LINES
 
 	print '\n\n\n'
 	retValues = {'obstacles': {'lines': total,'dudes':{'dudex':100,'dudey':100},'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
@@ -276,7 +181,9 @@ def ccw(A,B,C):
 def intersect(A,B,C,D):
     return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',port=80)
+	# app.run(host='0.0.0.0',port=80)
+	app.run(host='127.0.0.1',port=5000)
+
 	# main()
 
 	# 37 87 98
