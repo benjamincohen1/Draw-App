@@ -33,6 +33,12 @@ def test():
 	return "Testing 123"
 @app.route('/', methods = ['GET','POST'])
 def main():
+	print "DATA"
+	r =  request.files['image']
+	r.save('postimage.JPG')
+	BGIMAGE = 'postimage.JPG'
+
+	# return "ASD\n"
 	xSpeed = 0
 	ySpeed = 0
 	simplecvimg = Image(BGIMAGE)
@@ -57,17 +63,24 @@ def main():
 	if redBlobs != None:
 		for r in redBlobs:
 			#check for location and shape and size if necessary
+			endSet = False
 			if r.isCircle(tolerance=.5):
 				r.drawRect(layer=l1, color=(0,0,255), width=2, alpha=255)
 			else:
 				#end point!
+				endSet = True
+
 				endPoint = r.centroid()
 				endh = r.minRectHeight()
 				endw = r.minRectWidth()
 				endx = r.minRectX()
 				endy = r.minRectY()
 				r.drawRect(layer=l1, color=(0,255,255), width=2, alpha=255)
-
+		if not endSet:
+			endh = -1
+			endw = -1
+			endx = -1
+			endy = -1
 		print "RED BLOBS FOUND"
 		for r in redBlobs:
 
