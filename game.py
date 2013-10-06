@@ -30,8 +30,10 @@ class Point(object):
 		'''Defines x and y variables'''
 		self.x = x
 		self.y = y
-
-@app.route('/', methods = ['POST'])
+@app.route('/test')
+def test():
+	return "Testing 123"
+@app.route('/', methods = ['GET','POST'])
 def main():
 	pygame.init()
 	xSpeed = 0
@@ -259,7 +261,7 @@ def main():
 	retValues = {'obstacles': {'lines': total,'dudes':{'dudex':100,'dudey':100},'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
 	print retValues
 
-	return retValues
+	return str(retValues)
 def seg_intersect(a,b):
 	a1 = Point(a[0],a[1])
 	a2 = Point(a[2],a[3])
@@ -274,7 +276,7 @@ def ccw(A,B,C):
 def intersect(A,B,C,D):
     return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 if __name__ == '__main__':
-	# app.run(host='127.0.0.1',port=5000)
-	main()
+	app.run(host='0.0.0.0',port=80)
+	# main()
 
 	# 37 87 98
