@@ -34,21 +34,25 @@ def test():
 @app.route('/', methods = ['GET','POST'])
 def main():
 	print "DATA"
-	r =  request.files['image']
+	print request.files
+	try:
+		r =  request.files['image']
+	except:
+		return "Failed to get image"
 	r.save('postimage.JPG')
 	BGIMAGE = 'postimage.JPG'
-
+	
 	# return "ASD\n"
 	xSpeed = 0
 	ySpeed = 0
 	simplecvimg = Image(BGIMAGE)
 	train = False
 	# blue = simplecvimg.colorDistance((2,7,63)) * 2  #scale up
-	blue = simplecvimg.colorDistance((2,5,55)) * 1.5  #scale up
+	blue = simplecvimg.colorDistance((20,32,170)) * 1.5  #scale up
 	# blue.show()
 	# cv.WaitKey(10000)
-	red = simplecvimg.colorDistance((62,5,13)) 
-
+	# red = simplecvimg.colorDistance((62,5,13)) 
+	red = simplecvimg.colorDistance((130,20,20))
 	l1 = DrawingLayer((simplecvimg.width, simplecvimg.height))
 
 	# blue.show()
@@ -63,20 +67,19 @@ def main():
 	if redBlobs != None:
 		for r in redBlobs:
 			#check for location and shape and size if necessary
+			#end point!
 			endSet = False
 			if r.isCircle(tolerance=.5):
-				r.drawRect(layer=l1, color=(0,0,255), width=2, alpha=255)
-			else:
-				#end point!
+				print "Circle"
+			else:	
 				endSet = True
-
+				print "GOT END"
 				endPoint = r.centroid()
 				endh = r.minRectHeight()
 				endw = r.minRectWidth()
 				endx = r.minRectX()
 				endy = r.minRectY()
-				r.drawRect(layer=l1, color=(0,255,255), width=2, alpha=255)
-		if not endSet:
+		if endSet == False:
 			endh = -1
 			endw = -1
 			endx = -1
@@ -194,8 +197,8 @@ def ccw(A,B,C):
 def intersect(A,B,C,D):
     return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 if __name__ == '__main__':
-	# app.run(host='0.0.0.0',port=80)
-	app.run(host='127.0.0.1',port=5000)
+	app.run(host='0.0.0.0',port=80)
+	# app.run(host='127.0.0.1',port=5000)
 
 	# main()
 
