@@ -4,7 +4,7 @@ import os
 import time
 
 from flask import Flask, request, session, g, redirect, url_for, \
-	 abort, render_template, flash
+	 abort, render_template, flash, jsonify
 DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
@@ -163,10 +163,10 @@ def main():
 
 
 	print '\n\n\n'
-	retValues = {'obstacles': {'lines': total,'dudes':{'dudex':100,'dudey':100},'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
+	retValues = {'obstacles': {'lines': total,'dudes':[{'dudex':100,'dudey':100}],'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
 	print retValues
 
-	return str(retValues)
+	return jsonify(retValues)
 def seg_intersect(a,b):
 	a1 = Point(a[0],a[1])
 	a2 = Point(a[2],a[3])
