@@ -17,7 +17,7 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 BGIMAGE = 'board6.JPG'
 keymap = {}
 allLines = []
-
+g = []
 
 class Point(object):
 	'''Creates a point on a coordinate plane with values x and y.'''
@@ -53,12 +53,16 @@ def main():
 	# cv.WaitKey(10000)
 	# red = simplecvimg.colorDistance((62,5,13)) 
 	red = simplecvimg.colorDistance((130,20,20))
+
+	green = simplecvimg.colorDistance((140,190,40))
+
 	l1 = DrawingLayer((simplecvimg.width, simplecvimg.height))
 
 	# blue.show()
 
 	redBlobs = (simplecvimg - red).findBlobs(minsize=200)
 	blueLine = (simplecvimg - blue).findBlobs()
+	greenBlobs = (simplecvimg - green).findBlobs()
 
 	simplecvimg.addDrawingLayer(l1)
 	simplecvimg.applyLayers()
@@ -166,6 +170,8 @@ def main():
 	# 	cv.WaitKey(10)
 
 	# 	cv.WaitKey(10)
+	for x in greenBlobs:
+		g.append(x.centroid())
 	total = []
 	for l in allLines:
 		past = l[0]
@@ -179,7 +185,7 @@ def main():
 
 
 	print '\n\n\n'
-	retValues = {'obstacles': {'lines': total,'dudes':[{'dudex':100,'dudey':100}],'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
+	retValues = {'obstacles': {'lines': total,'dudes':[{'dudex':x[0],'dudey':x[1]} for x in g],'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
 	print retValues
 
 	return jsonify(retValues)
