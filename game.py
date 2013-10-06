@@ -16,7 +16,7 @@ app.config.from_object(__name__)
 
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
-BGIMAGE = 'board5.JPG'
+BGIMAGE = 'board6.JPG'
 keymap = {}
 allLines = []
 
@@ -252,14 +252,14 @@ def main():
 		# print "YSPEED: " + str(ySpeed)
 
 		cv.WaitKey(25)
-		break
+		# break
 	#TOTAL IS ALL LINES
 
 	print '\n\n\n'
 	retValues = {'obstacles': {'lines': total,'dudes':{'dudex':100,'dudey':100},'end':{'x':endx,'y':endy,'height':endh,'width':endy}}}
 	print retValues
 
-	return retValues
+	return str(retValues)
 def seg_intersect(a,b):
 	a1 = Point(a[0],a[1])
 	a2 = Point(a[2],a[3])
